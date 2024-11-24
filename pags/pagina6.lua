@@ -6,14 +6,14 @@ local cells = {} -- Store created cells
 local petriDish -- Reference to the petri dish object
 local fixedSpots = { -- Fixed positions for cells
 {
-    x = display.contentCenterX - 50,
-    y = display.contentCenterY - 50
+    x = display.contentCenterX - 120,
+    y = display.contentCenterY + 100
 }, {
-    x = display.contentCenterX + 50,
-    y = display.contentCenterY - 50
+    x = display.contentCenterX + 120,
+    y = display.contentCenterY + 100
 }, {
     x = display.contentCenterX - 50,
-    y = display.contentCenterY + 50
+    y = display.contentCenterY + 100
 }}
 
 function scene:create(event)
@@ -28,13 +28,9 @@ function scene:create(event)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    -- Page text
-    local pageText = display.newText(sceneGroup, "Página 6", display.contentCenterX, display.contentCenterY - 200,
-        native.systemFont, 40)
-
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
-    nextButton:setFillColor(100, 0, 0, 1)
+    nextButton:setFillColor(0, 0, 0, 1)
     nextButton:addEventListener("tap", function()
         composer.gotoScene("pags.contracapa", {
             effect = "slideLeft",
@@ -43,7 +39,7 @@ function scene:create(event)
     end)
 
     local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
-    prevButton:setFillColor(100, 0, 0, 1)
+    prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
         composer.gotoScene("pags.pagina5", {
             effect = "slideRight",
@@ -53,19 +49,19 @@ function scene:create(event)
 
     -- Sound toggle button
     local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
-    soundIcon.x = display.contentWidth - 60
-    soundIcon.y = 40
+    soundIcon.x = display.contentWidth - 100
+    soundIcon.y = 50
 
     -- Sound status text
     local soundText = display.newText({
         parent = sceneGroup,
         text = "LIGADO",
         x = soundIcon.x,
-        y = soundIcon.y + 40,
+        y = soundIcon.y + 30,
         font = native.systemFontBold,
         fontSize = 20
     })
-    soundText:setFillColor(100, 0, 0, 1)
+    soundText:setFillColor(0, 0, 0, 1)
 
     -- Sound toggle logic
     local soundHandle = true
@@ -88,9 +84,9 @@ function scene:create(event)
     end)
 
     -- Create the petri dish as a sensor
-    petriDish = display.newImageRect(sceneGroup, "imagens/telophase/petri.png", 300, 300)
+    petriDish = display.newImageRect(sceneGroup, "imagens/telophase/petri.png", 430, 250)
     petriDish.x = display.contentCenterX
-    petriDish.y = display.contentCenterY
+    petriDish.y = display.contentCenterY + 125
     physics.addBody(petriDish, "static", {
         radius = 150,
         isSensor = true

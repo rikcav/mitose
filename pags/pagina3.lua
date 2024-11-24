@@ -15,7 +15,7 @@ function scene:create(event)
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
-    nextButton:setFillColor(100, 0, 0, 1)
+    nextButton:setFillColor(0, 0, 0, 1)
     nextButton:addEventListener("tap", function()
         composer.gotoScene("pags.pagina4", {
             effect = "slideLeft",
@@ -24,7 +24,7 @@ function scene:create(event)
     end)
 
     local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
-    prevButton:setFillColor(100, 0, 0, 1)
+    prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
         composer.gotoScene("pags.pagina2", {
             effect = "slideRight",
@@ -34,8 +34,8 @@ function scene:create(event)
 
     -- Sound toggle button
     local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
-    soundIcon.x = display.contentWidth - 60
-    soundIcon.y = 40
+    soundIcon.x = display.contentWidth - 100
+    soundIcon.y = 50
 
     -- Sound status text
     local soundText = display.newText({
@@ -46,7 +46,7 @@ function scene:create(event)
         font = native.systemFontBold,
         fontSize = 20
     })
-    soundText:setFillColor(100, 0, 0, 1)
+    soundText:setFillColor(0, 0, 0, 1)
 
     -- Sound toggle logic
     local soundHandle = true
