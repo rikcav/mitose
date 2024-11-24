@@ -10,7 +10,7 @@ function scene:create(event)
     background.y = display.contentCenterY
 
     -- "Next Page" text
-    local nextText = display.newText(sceneGroup, "Próxima", 685, 990, native.systemFont, 30)
+    local nextText = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
     nextText:setFillColor(100, 100, 100, 1)
 
     -- Navigation to the next page
@@ -22,7 +22,7 @@ function scene:create(event)
     end)
 
     -- "Next button"
-    local nextButton = display.newImageRect(sceneGroup, "imagens/right_arrow.png", 58, 58)
+    local nextButton = display.newImageRect(sceneGroup, "imagens/right_arrow.png", 60, 60)
     nextButton.x = 687
     nextButton.y = 940
 

@@ -14,7 +14,7 @@ function scene:create(event)
         native.systemFont, 40)
 
     -- Navigation buttons
-    local nextButton = display.newText(sceneGroup, "Próxima", 685, 930, native.systemFont, 30)
+    local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
     nextButton:setFillColor(100, 0, 0, 1)
     nextButton:addEventListener("tap", function()
         composer.gotoScene("pags.contracapa", {
@@ -23,7 +23,7 @@ function scene:create(event)
         })
     end)
 
-    local prevButton = display.newText(sceneGroup, "Anterior", 48, 930, native.systemFont, 30)
+    local prevButton = display.newText(sceneGroup, "ANTERIOR", 48, 990, native.systemFont, 30)
     prevButton:setFillColor(100, 0, 0, 1)
     prevButton:addEventListener("tap", function()
         composer.gotoScene("pags.pagina5", {
