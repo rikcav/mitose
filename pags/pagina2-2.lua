@@ -11,7 +11,7 @@ function scene:create(event)
     background.y = display.contentCenterY
 
     -- Navigation buttons
-    local nextButton = display.newText(sceneGroup, "PRÓXIMA", 388, 990, native.systemFont, 30)
+    local nextButton = display.newText(sceneGroup, "PRÓXIMA", display.contentWidth - 80, 990, native.systemFont, 30)
     nextButton:setFillColor(0, 0, 0, 1)
     nextButton:addEventListener("tap", function()
         composer.gotoScene("pags.pagina3", {
@@ -20,11 +20,11 @@ function scene:create(event)
         })
     end)
 
-    local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
+    local prevButton = display.newText(sceneGroup, "ANTERIOR", display.contentCenterX, 100, native.systemFont, 30)
     prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
-        composer.gotoScene("pags.capa", {
-            effect = "slideRight",
+        composer.gotoScene("pags.pagina2", {
+            effect = "slideDown",
             time = 500
         })
     end)

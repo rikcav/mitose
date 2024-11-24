@@ -26,7 +26,7 @@ function scene:create(event)
     local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
     prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina2", {
+        composer.gotoScene("pags.pagina2-2", {
             effect = "slideRight",
             time = 500
         })
