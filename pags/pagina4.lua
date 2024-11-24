@@ -4,14 +4,31 @@ local scene = composer.newScene()
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Background
-    local background = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth,
+    -- Background image
+    local background = display.newImageRect(sceneGroup, "imagens/Metafase.png", display.contentWidth,
         display.contentHeight)
-    background:setFillColor(0.9, 0.9, 0.9)
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
 
-    -- Page text
-    local pageText = display.newText(sceneGroup, "Página 4", display.contentCenterX, display.contentCenterY,
-        native.systemFont, 40)
+    local metaphaseEmpty = display.newImageRect(sceneGroup, "imagens/metaphase/metaphase-empty.png", 145, 161)
+    metaphaseEmpty.x = display.contentCenterX
+    metaphaseEmpty.y = display.contentCenterY + 90
+
+    local chromosome1 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-1.png", 26, 14)
+    chromosome1.x = display.contentCenterX - 25
+    chromosome1.y = display.contentCenterY + 80
+
+    local chromosome2 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-2.png", 26, 14)
+    chromosome2.x = display.contentCenterX + 25
+    chromosome2.y = display.contentCenterY + 110
+
+    local chromosome3 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-1.png", 26, 14)
+    chromosome3.x = display.contentCenterX - 15
+    chromosome3.y = display.contentCenterY + 60
+
+    local chromosome4 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-2.png", 26, 14)
+    chromosome4.x = display.contentCenterX + 35
+    chromosome4.y = display.contentCenterY + 120
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
