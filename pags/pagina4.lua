@@ -5,23 +5,31 @@ function scene:create(event)
     local sceneGroup = self.view
 
     -- Background
-    local background = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth, display.contentHeight)
+    local background = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth,
+        display.contentHeight)
     background:setFillColor(0.9, 0.9, 0.9)
 
     -- Page text
-    local pageText = display.newText(sceneGroup, "Página 4", display.contentCenterX, display.contentCenterY, native.systemFont, 40)
+    local pageText = display.newText(sceneGroup, "Página 4", display.contentCenterX, display.contentCenterY,
+        native.systemFont, 40)
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "Próxima", 685, 930, native.systemFont, 30)
     nextButton:setFillColor(100, 0, 0, 1)
     nextButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina5", {effect = "slideLeft", time = 500})
+        composer.gotoScene("pags.pagina5", {
+            effect = "slideLeft",
+            time = 500
+        })
     end)
 
     local prevButton = display.newText(sceneGroup, "Anterior", 48, 930, native.systemFont, 30)
     prevButton:setFillColor(100, 0, 0, 1)
     prevButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina3", {effect = "slideRight", time = 500})
+        composer.gotoScene("pags.pagina3", {
+            effect = "slideRight",
+            time = 500
+        })
     end)
 
     -- Sound toggle button
@@ -44,11 +52,17 @@ function scene:create(event)
     local soundHandle = true
     soundIcon:addEventListener("tap", function()
         if soundHandle then
-            soundIcon.fill = {type = "image", filename = "imagens/mute.png"}
+            soundIcon.fill = {
+                type = "image",
+                filename = "imagens/mute.png"
+            }
             soundText.text = "Desligado"
             soundHandle = false
         else
-            soundIcon.fill = {type = "image", filename = "imagens/sound.png"}
+            soundIcon.fill = {
+                type = "image",
+                filename = "imagens/sound.png"
+            }
             soundText.text = "Ligado"
             soundHandle = true
         end

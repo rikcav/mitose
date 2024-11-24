@@ -4,7 +4,8 @@ local scene = composer.newScene()
 function scene:create(event)
     local sceneGroup = self.view
 
-    local background = display.newImageRect(sceneGroup, "imagens/Contracapa.png", display.contentWidth, display.contentHeight)
+    local background = display.newImageRect(sceneGroup, "imagens/Contracapa.png", display.contentWidth,
+        display.contentHeight)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
@@ -12,7 +13,10 @@ function scene:create(event)
     restartButton:setFillColor(0, 0, 1)
 
     restartButton:addEventListener("tap", function()
-        composer.gotoScene("pags.capa", {effect = "crossFade", time = 500})
+        composer.gotoScene("pags.capa", {
+            effect = "crossFade",
+            time = 500
+        })
     end)
 end
 
