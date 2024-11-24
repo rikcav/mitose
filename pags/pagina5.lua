@@ -40,7 +40,7 @@ function scene:create(event)
     -- Sound status text
     local soundText = display.newText({
         parent = sceneGroup,
-        text = "Ligado",
+        text = "LIGADO",
         x = soundIcon.x,
         y = soundIcon.y + 40,
         font = native.systemFontBold,
@@ -56,14 +56,14 @@ function scene:create(event)
                 type = "image",
                 filename = "imagens/mute.png"
             }
-            soundText.text = "Desligado"
+            soundText.text = "DESLIGADO"
             soundHandle = false
         else
             soundIcon.fill = {
                 type = "image",
                 filename = "imagens/sound.png"
             }
-            soundText.text = "Ligado"
+            soundText.text = "LIGADO"
             soundHandle = true
         end
     end)

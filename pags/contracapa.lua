@@ -52,6 +52,42 @@ function scene:create(event)
             time = 500
         })
     end)
+
+    -- Sound toggle button
+    local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
+    soundIcon.x = display.contentWidth - 60
+    soundIcon.y = 40
+
+    -- Sound status text
+    local soundText = display.newText({
+        parent = sceneGroup,
+        text = "LIGADO",
+        x = soundIcon.x,
+        y = soundIcon.y + 40,
+        font = native.systemFontBold,
+        fontSize = 20
+    })
+    soundText:setFillColor(100, 100, 100, 1)
+
+    -- Sound toggle logic
+    local soundHandle = true
+    soundIcon:addEventListener("tap", function()
+        if soundHandle then
+            soundIcon.fill = {
+                type = "image",
+                filename = "imagens/mute.png"
+            }
+            soundText.text = "DESLIGADO"
+            soundHandle = false
+        else
+            soundIcon.fill = {
+                type = "image",
+                filename = "imagens/sound.png"
+            }
+            soundText.text = "LIGADO"
+            soundHandle = true
+        end
+    end)
 end
 
 function scene:show(event)
