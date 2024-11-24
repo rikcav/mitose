@@ -1,6 +1,8 @@
 local composer = require("composer")
 local scene = composer.newScene()
 
+local chromosomes = {} -- Store chromosome objects for easy access
+
 function scene:create(event)
     local sceneGroup = self.view
 
@@ -17,18 +19,22 @@ function scene:create(event)
     local chromosome1 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-1.png", 26, 14)
     chromosome1.x = display.contentCenterX - 25
     chromosome1.y = display.contentCenterY + 80
+    table.insert(chromosomes, chromosome1)
 
     local chromosome2 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-2.png", 26, 14)
     chromosome2.x = display.contentCenterX + 25
     chromosome2.y = display.contentCenterY + 110
+    table.insert(chromosomes, chromosome2)
 
     local chromosome3 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-1.png", 26, 14)
     chromosome3.x = display.contentCenterX - 15
     chromosome3.y = display.contentCenterY + 60
+    table.insert(chromosomes, chromosome3)
 
     local chromosome4 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-2.png", 26, 14)
     chromosome4.x = display.contentCenterX + 35
     chromosome4.y = display.contentCenterY + 120
+    table.insert(chromosomes, chromosome4)
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
@@ -84,6 +90,40 @@ function scene:create(event)
             soundHandle = true
         end
     end)
+end
+
+-- Accelerometer event listener to move all chromosomes
+local function onAccelerometer(event)
+    -- Check if the accelerometer readings exceed a certain threshold
+    if math.abs(event.xInstant) > 1.5 or math.abs(event.yInstant) > 1.5 or math.abs(event.zInstant) > 1.5 then
+        print("Accelerometer triggered! Moving chromosomes.")
+
+        -- Move each chromosome to its aligned position
+        transition.to(chromosomes[1], {
+            time = 500,
+            x = 313,
+            y = 656
+        })
+        transition.to(chromosomes[2], {
+            time = 500,
+            x = 368,
+            y = 656
+        })
+        transition.to(chromosomes[3], {
+            time = 500,
+            x = 313,
+            y = 680
+        })
+        transition.to(chromosomes[4], {
+            time = 500,
+            x = 368,
+            y = 680
+        })
+
+        -- Remove accelerometer listener after moving the chromosomes
+        Runtime:removeEventListener("accelerometer", onAccelerometer)
+        print("Chromosomes aligned. Accelerometer listener removed.")
+    end
 end
 
 function scene:show(event)
