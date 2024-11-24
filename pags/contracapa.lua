@@ -9,7 +9,7 @@ function scene:create(event)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    local restartButton = display.newText(sceneGroup, "Voltar ao Início", 685, 930, native.systemFont, 30)
+    local restartButton = display.newText(sceneGroup, "Início", 685, 930, native.systemFont, 30)
     restartButton:setFillColor(0, 0, 1)
 
     restartButton:addEventListener("tap", function()

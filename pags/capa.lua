@@ -11,7 +11,7 @@ function scene:create(event)
 
     -- "Next Page" text
     local nextText = display.newText(sceneGroup, "Próxima", 685, 990, native.systemFont, 30)
-    nextText:setFillColor(100, 0, 0, 1)
+    nextText:setFillColor(100, 100, 100, 1)
 
     -- Navigation to the next page
     nextText:addEventListener("tap", function()
@@ -35,19 +35,19 @@ function scene:create(event)
 
     -- Sound toggle button
     local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
-    soundIcon.x = display.contentWidth - 40
+    soundIcon.x = display.contentWidth - 60
     soundIcon.y = 40
 
     -- Text for sound status
     local soundText = display.newText({
         parent = sceneGroup,
-        text = "Ligado",
+        text = "LIGADO",
         x = soundIcon.x,
         y = soundIcon.y + 40,
         font = native.systemFontBold,
         fontSize = 20
     })
-    soundText:setFillColor(100, 0, 0, 1)
+    soundText:setFillColor(100, 100, 100, 1)
 
     -- Sound toggle logic
     local soundHandle = true
@@ -57,14 +57,14 @@ function scene:create(event)
                 type = "image",
                 filename = "imagens/mute.png"
             }
-            soundText.text = "Desligado"
+            soundText.text = "DESLIGADO"
             soundHandle = false
         else
             soundIcon.fill = {
                 type = "image",
                 filename = "imagens/sound.png"
             }
-            soundText.text = "Ligado"
+            soundText.text = "LIGADO"
             soundHandle = true
         end
     end)

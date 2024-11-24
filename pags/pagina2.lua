@@ -34,7 +34,7 @@ function scene:create(event)
 
     -- Sound toggle button
     local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
-    soundIcon.x = display.contentWidth - 40
+    soundIcon.x = display.contentWidth - 60
     soundIcon.y = 40
 
     -- Sound status text
