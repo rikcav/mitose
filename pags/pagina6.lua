@@ -23,7 +23,7 @@ function scene:create(event)
         })
     end)
 
-    local prevButton = display.newText(sceneGroup, "ANTERIOR", 48, 990, native.systemFont, 30)
+    local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
     prevButton:setFillColor(100, 0, 0, 1)
     prevButton:addEventListener("tap", function()
         composer.gotoScene("pags.pagina5", {

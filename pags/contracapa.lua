@@ -10,7 +10,7 @@ function scene:create(event)
     background.y = display.contentCenterY
 
     local restartButton = display.newText(sceneGroup, "INÍCIO", 685, 990, native.systemFont, 30)
-    restartButton:setFillColor(0, 0, 1)
+    restartButton:setFillColor(100, 100, 100, 1)
 
     restartButton:addEventListener("tap", function()
         composer.gotoScene("pags.capa", {
