@@ -4,27 +4,23 @@ local scene = composer.newScene()
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Background
-    local background = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth,
-        display.contentHeight)
-    background:setFillColor(0.9, 0.9, 0.9)
-
-    -- Page text
-    local pageText = display.newText(sceneGroup, "Página 2", display.contentCenterX, display.contentCenterY,
-        native.systemFont, 40)
+    -- Background image
+    local background = display.newImageRect(sceneGroup, "imagens/Introducao.png", display.contentWidth, display.contentHeight)
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
 
     -- Navigation buttons
-    local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
-    nextButton:setFillColor(100, 0, 0, 1)
+    local nextButton = display.newText(sceneGroup, "PRÓXIMA", 388, 990, native.systemFont, 30)
+    nextButton:setFillColor(0, 0, 0, 1)
     nextButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina3", {
-            effect = "slideLeft",
+        composer.gotoScene("pags.pagina2-2", {
+            effect = "slideUp",
             time = 500
         })
     end)
 
     local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
-    prevButton:setFillColor(100, 0, 0, 1)
+    prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
         composer.gotoScene("pags.capa", {
             effect = "slideRight",
@@ -34,8 +30,8 @@ function scene:create(event)
 
     -- Sound toggle button
     local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
-    soundIcon.x = display.contentWidth - 60
-    soundIcon.y = 40
+    soundIcon.x = display.contentWidth - 100
+    soundIcon.y = 50
 
     -- Sound status text
     local soundText = display.newText({
@@ -46,7 +42,7 @@ function scene:create(event)
         font = native.systemFontBold,
         fontSize = 20
     })
-    soundText:setFillColor(100, 0, 0, 1)
+    soundText:setFillColor(0, 0, 0, 1)
 
     -- Sound toggle logic
     local soundHandle = true
