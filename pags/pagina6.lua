@@ -97,25 +97,25 @@ function scene:create(event)
         local dishX, dishY, radius = petriDish.x, petriDish.y, 150
 
         -- Left wall
-        local leftWall = display.newRect(dishX - radius, dishY, 10, 2 * radius)
+        local leftWall = display.newRect(dishX - radius, dishY, 15, 2 * radius)
         physics.addBody(leftWall, "static")
         leftWall.isVisible = false
         sceneGroup:insert(leftWall)
 
         -- Right wall
-        local rightWall = display.newRect(dishX + radius, dishY, 10, 2 * radius)
+        local rightWall = display.newRect(dishX + radius, dishY, 15, 2 * radius)
         physics.addBody(rightWall, "static")
         rightWall.isVisible = false
         sceneGroup:insert(rightWall)
 
         -- Top wall
-        local topWall = display.newRect(dishX, dishY - radius, 2 * radius, 10)
+        local topWall = display.newRect(dishX, dishY - radius, 2 * radius, 15)
         physics.addBody(topWall, "static")
         topWall.isVisible = false
         sceneGroup:insert(topWall)
 
         -- Bottom wall
-        local bottomWall = display.newRect(dishX, dishY + radius, 2 * radius, 10)
+        local bottomWall = display.newRect(dishX, dishY + radius, 2 * radius, 15)
         physics.addBody(bottomWall, "static")
         bottomWall.isVisible = false
         sceneGroup:insert(bottomWall)
@@ -130,7 +130,7 @@ function scene:create(event)
         cell1.x = spot.x - 15
         cell1.y = spot.y
         physics.addBody(cell1, {
-            radius = 15,
+            radius = 20,
             bounce = 0.9,
             isSensor = true
         })
@@ -140,7 +140,7 @@ function scene:create(event)
         cell2.x = spot.x + 15
         cell2.y = spot.y
         physics.addBody(cell2, {
-            radius = 15,
+            radius = 20,
             bounce = 0.9,
             isSensor = true
         })
