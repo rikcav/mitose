@@ -10,37 +10,78 @@ function scene:create(event)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
-    local leftChromosome1 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-1.png", 30, 13)
-    leftChromosome1.x = display.contentCenterX - 14
-    leftChromosome1.y = display.contentCenterY + 42
+    -- Function to add dragging logic to a chromosome
+    local function makeDraggable(chromosome)
+        local function drag(event)
+            local phase = event.phase
+            local target = event.target
 
-    local rightChromosome1 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-1.png", 30, 13)
-    rightChromosome1.x = display.contentCenterX + 14
-    rightChromosome1.y = display.contentCenterY + 42
+            if phase == "began" then
+                display.currentStage:setFocus(target)
+                target.touchOffsetX = event.x - target.x
 
-    local leftChromosome2 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-2.png", 30, 13)
-    leftChromosome2.x = display.contentCenterX - 14
-    leftChromosome2.y = display.contentCenterY + 80
+            elseif phase == "moved" then
+                -- Update chromosome position along x-axis
+                target.x = event.x - target.touchOffsetX
 
-    local rightChromosome2 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-2.png", 30, 13)
-    rightChromosome2.x = display.contentCenterX + 14
-    rightChromosome2.y = display.contentCenterY + 80
+                -- Constrain chromosome within screen bounds
+                if target.x < display.contentCenterX - 100 then
+                    target.x = display.contentCenterX - 100
+                elseif target.x > display.contentCenterX + 100 then
+                    target.x = display.contentCenterX + 100
+                end
 
-    local leftChromosome3 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-1.png", 30, 13)
-    leftChromosome3.x = display.contentCenterX - 14
-    leftChromosome3.y = display.contentCenterY + 152
+            elseif phase == "ended" or phase == "cancelled" then
+                display.currentStage:setFocus(nil)
+            end
 
-    local rightChromosome3 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-1.png", 30, 13)
-    rightChromosome3.x = display.contentCenterX + 14
-    rightChromosome3.y = display.contentCenterY + 152
+            return true
+        end
 
-    local leftChromosome4 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-2.png", 30, 13)
-    leftChromosome4.x = display.contentCenterX - 14
-    leftChromosome4.y = display.contentCenterY + 186
+        chromosome:addEventListener("touch", drag)
+    end
 
-    local rightChromosome4 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-2.png", 30, 13)
-    rightChromosome4.x = display.contentCenterX + 14
-    rightChromosome4.y = display.contentCenterY + 186
+    -- Create chromosomes with dragging functionality
+    local chromosomes = {{
+        image = "imagens/anaphase/left-chromosome-1.png",
+        x = display.contentCenterX - 14,
+        y = display.contentCenterY + 42
+    }, {
+        image = "imagens/anaphase/right-chromosome-1.png",
+        x = display.contentCenterX + 14,
+        y = display.contentCenterY + 42
+    }, {
+        image = "imagens/anaphase/left-chromosome-2.png",
+        x = display.contentCenterX - 14,
+        y = display.contentCenterY + 80
+    }, {
+        image = "imagens/anaphase/right-chromosome-2.png",
+        x = display.contentCenterX + 14,
+        y = display.contentCenterY + 80
+    }, {
+        image = "imagens/anaphase/left-chromosome-1.png",
+        x = display.contentCenterX - 14,
+        y = display.contentCenterY + 152
+    }, {
+        image = "imagens/anaphase/right-chromosome-1.png",
+        x = display.contentCenterX + 14,
+        y = display.contentCenterY + 152
+    }, {
+        image = "imagens/anaphase/left-chromosome-2.png",
+        x = display.contentCenterX - 14,
+        y = display.contentCenterY + 186
+    }, {
+        image = "imagens/anaphase/right-chromosome-2.png",
+        x = display.contentCenterX + 14,
+        y = display.contentCenterY + 186
+    }}
+
+    for _, data in ipairs(chromosomes) do
+        local chromosome = display.newImageRect(sceneGroup, data.image, 30, 13)
+        chromosome.x = data.x
+        chromosome.y = data.y
+        makeDraggable(chromosome)
+    end
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
