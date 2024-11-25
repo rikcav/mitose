@@ -4,14 +4,43 @@ local scene = composer.newScene()
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Background
-    local background = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth,
+    -- Background image
+    local background = display.newImageRect(sceneGroup, "imagens/Anafase.png", display.contentWidth,
         display.contentHeight)
-    background:setFillColor(0.9, 0.9, 0.9)
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
 
-    -- Page text
-    local pageText = display.newText(sceneGroup, "Página 5", display.contentCenterX, display.contentCenterY,
-        native.systemFont, 40)
+    local leftChromosome1 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-1.png", 30, 13)
+    leftChromosome1.x = display.contentCenterX - 14
+    leftChromosome1.y = display.contentCenterY + 42
+
+    local rightChromosome1 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-1.png", 30, 13)
+    rightChromosome1.x = display.contentCenterX + 14
+    rightChromosome1.y = display.contentCenterY + 42
+
+    local leftChromosome2 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-2.png", 30, 13)
+    leftChromosome2.x = display.contentCenterX - 14
+    leftChromosome2.y = display.contentCenterY + 80
+
+    local rightChromosome2 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-2.png", 30, 13)
+    rightChromosome2.x = display.contentCenterX + 14
+    rightChromosome2.y = display.contentCenterY + 80
+
+    local leftChromosome3 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-1.png", 30, 13)
+    leftChromosome3.x = display.contentCenterX - 14
+    leftChromosome3.y = display.contentCenterY + 152
+
+    local rightChromosome3 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-1.png", 30, 13)
+    rightChromosome3.x = display.contentCenterX + 14
+    rightChromosome3.y = display.contentCenterY + 152
+
+    local leftChromosome4 = display.newImageRect(sceneGroup, "imagens/anaphase/left-chromosome-2.png", 30, 13)
+    leftChromosome4.x = display.contentCenterX - 14
+    leftChromosome4.y = display.contentCenterY + 186
+
+    local rightChromosome4 = display.newImageRect(sceneGroup, "imagens/anaphase/right-chromosome-2.png", 30, 13)
+    rightChromosome4.x = display.contentCenterX + 14
+    rightChromosome4.y = display.contentCenterY + 186
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
