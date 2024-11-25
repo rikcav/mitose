@@ -4,14 +4,45 @@ local scene = composer.newScene()
 function scene:create(event)
     local sceneGroup = self.view
 
-    -- Background
-    local background = display.newRect(sceneGroup, display.contentCenterX, display.contentCenterY, display.contentWidth,
+    -- Background image
+    local background = display.newImageRect(sceneGroup, "imagens/Profase.png", display.contentWidth,
         display.contentHeight)
-    background:setFillColor(0.9, 0.9, 0.9)
+    background.x = display.contentCenterX
+    background.y = display.contentCenterY
 
-    -- Page text
-    local pageText = display.newText(sceneGroup, "Página 3", display.contentCenterX, display.contentCenterY,
-        native.systemFont, 40)
+    -- Prophase cell structure
+    local prophase_cell = display.newImageRect(sceneGroup, "imagens/prophase/prophase-empty.png", 145, 151)
+    prophase_cell.x = display.contentCenterX
+    prophase_cell.y = display.contentCenterY + 153
+
+    -- Nucleus as a pink circle
+    local nucleusX = display.contentCenterX
+    local nucleusY = display.contentCenterY + 153
+    local nucleusRadius = 40
+    local nucleus = display.newCircle(sceneGroup, nucleusX, nucleusY, nucleusRadius)
+    nucleus:setFillColor(1, 0.75, 0.8) -- Pink color (RGB: 1, 0.75, 0.8)
+
+    -- Chromosomes (fixed positions inside the nucleus)
+    local chromosomes = {}
+    local chromosomeImages = {
+        "imagens/prophase/chromosome-1.png",
+        "imagens/prophase/chromosome-2.png",
+        "imagens/prophase/chromosome-1.png",
+        "imagens/prophase/chromosome-2.png"
+    }
+    local chromosomePositions = {
+        { x = nucleusX - 10, y = nucleusY - 10 },
+        { x = nucleusX + 10, y = nucleusY - 10 },
+        { x = nucleusX - 10, y = nucleusY + 10 },
+        { x = nucleusX + 10, y = nucleusY + 10 }
+    }
+
+    for i = 1, #chromosomeImages do
+        local chromosome = display.newImageRect(sceneGroup, chromosomeImages[i], 22, 12)
+        chromosome.x = chromosomePositions[i].x
+        chromosome.y = chromosomePositions[i].y
+        table.insert(chromosomes, chromosome)
+    end
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
@@ -37,7 +68,6 @@ function scene:create(event)
     soundIcon.x = display.contentWidth - 100
     soundIcon.y = 50
 
-    -- Sound status text
     local soundText = display.newText({
         parent = sceneGroup,
         text = "LIGADO",
@@ -48,7 +78,6 @@ function scene:create(event)
     })
     soundText:setFillColor(0, 0, 0, 1)
 
-    -- Sound toggle logic
     local soundHandle = true
     soundIcon:addEventListener("tap", function()
         if soundHandle then
@@ -67,6 +96,41 @@ function scene:create(event)
             soundHandle = true
         end
     end)
+
+    -- Function to open the nucleus
+    local function openNucleus(event)
+        if event.phase == "moved" then
+            local scale = math.abs(event.x - event.xStart) + math.abs(event.y - event.yStart)
+
+            if scale > 50 then
+                -- Animate nucleus disappearance
+                transition.to(nucleus, {
+                    time = 500,
+                    xScale = 0.5,
+                    yScale = 0.5,
+                    alpha = 0,
+                    onComplete = function()
+                        nucleus:removeSelf()
+                        nucleus = nil
+                    end
+                })
+
+                -- Move chromosomes into position
+                for i, chromosome in ipairs(chromosomes) do
+                    transition.to(chromosome, {
+                        time = 1000,
+                        x = display.contentCenterX + (i % 2 == 0 and 10 or -10),
+                        y = display.contentCenterY + 100 + (i * 20),
+                        transition = easing.outBounce
+                    })
+                end
+
+                Runtime:removeEventListener("touch", openNucleus) -- Remove interaction event
+            end
+        end
+    end
+
+    Runtime:addEventListener("touch", openNucleus)
 end
 
 function scene:show(event)
@@ -78,6 +142,7 @@ end
 function scene:hide(event)
     if event.phase == "will" then
         print("Saindo da página 3")
+        Runtime:removeEventListener("touch", openNucleus)
     end
 end
 
