@@ -1,8 +1,14 @@
 local composer = require("composer")
 local scene = composer.newScene()
 
+local backgroundMusic -- Variável para armazenar o áudio
+local musicChannel -- Canal do áudio
+
 function scene:create(event)
     local sceneGroup = self.view
+
+    -- Carregar o áudio
+    backgroundMusic = audio.loadStream("sons/001-ozzy.mp3")
 
     -- Background image
     local background = display.newImageRect(sceneGroup, "imagens/Introducao.png", display.contentWidth, display.contentHeight)
@@ -29,7 +35,7 @@ function scene:create(event)
     end)
 
     -- Sound toggle button
-    local soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
+    soundIcon = display.newImageRect(sceneGroup, "imagens/sound.png", 50, 50)
     soundIcon.x = display.contentWidth - 100
     soundIcon.y = 50
 
@@ -54,6 +60,7 @@ function scene:create(event)
             }
             soundText.text = "DESLIGADO"
             soundHandle = false
+            audio.pause(musicChannel) -- Pausar música
         else
             soundIcon.fill = {
                 type = "image",
@@ -61,24 +68,40 @@ function scene:create(event)
             }
             soundText.text = "LIGADO"
             soundHandle = true
+            audio.resume(musicChannel) -- Retomar música
         end
     end)
 end
 
 function scene:show(event)
     if event.phase == "did" then
-        print("Página 2 exibida")
+        print("Página exibida")
+        -- Tocar música de fundo
+        if backgroundMusic then
+            musicChannel = audio.play(backgroundMusic, { loops = 0 })
+        else
+            print("Erro: Áudio não encontrado.")
+        end
     end
 end
 
 function scene:hide(event)
     if event.phase == "will" then
-        print("Saindo da página 2")
+        print("Saindo da página")
+        -- Pausar música ao sair
+        if musicChannel then
+            audio.pause(musicChannel)
+        end
     end
 end
 
 function scene:destroy(event)
-    print("Destruindo página 2")
+    print("Destruindo página")
+    -- Liberar memória do áudio
+    if backgroundMusic then
+        audio.dispose(backgroundMusic)
+        backgroundMusic = nil
+    end
 end
 
 scene:addEventListener("create", scene)

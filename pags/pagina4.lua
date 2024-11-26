@@ -2,13 +2,40 @@ local composer = require("composer")
 local scene = composer.newScene()
 
 local chromosomes = {} -- Store chromosome objects for easy access
+local isShaken = false -- Tracks if the shaking has already triggered
+
+-- Function to clean resources
+local function cleanScene()
+    isShaken = false -- Reset shake state
+end
+
+-- Move chromosomes to a vertically aligned column, lowering them on the Y-axis
+local function moveChromosomesToVerticalAlignment()
+    for i, chromosome in ipairs(chromosomes) do
+        transition.to(chromosome, {
+            time = 500,
+            x = display.contentCenterX, -- Move to the center of the screen on the X-axis
+            y = display.contentCenterY + 30 + (i - 1) * 40, -- Lower the column by starting at `display.contentCenterY + 50`
+            rotation = 90, -- Rotate each chromosome upright
+        })
+    end
+    print("Chromosomes aligned in a vertical column.")
+end
+
+-- Function to handle shaking and triggering chromosome alignment
+local function onAccelerometer(event)
+    if not isShaken and (math.abs(event.xInstant) > 1.1 or math.abs(event.yInstant) > 1.1 or math.abs(event.zInstant) > 1.1) then
+        print("Shaking detected! Aligning chromosomes.")
+        isShaken = true -- Prevent triggering again
+        moveChromosomesToVerticalAlignment()
+    end
+end
 
 function scene:create(event)
     local sceneGroup = self.view
 
     -- Background image
-    local background = display.newImageRect(sceneGroup, "imagens/Metafase.png", display.contentWidth,
-        display.contentHeight)
+    local background = display.newImageRect(sceneGroup, "imagens/Metafase.png", display.contentWidth, display.contentHeight)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
@@ -16,43 +43,33 @@ function scene:create(event)
     metaphaseEmpty.x = display.contentCenterX
     metaphaseEmpty.y = display.contentCenterY + 90
 
-    local chromosome1 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-1.png", 26, 14)
-    chromosome1.x = display.contentCenterX - 25
-    chromosome1.y = display.contentCenterY + 80
-    table.insert(chromosomes, chromosome1)
+    -- Initialize chromosomes
+    local chromosomePositions = {
+        { x = display.contentCenterX - 25, y = display.contentCenterY + 80 },
+        { x = display.contentCenterX + 25, y = display.contentCenterY + 110 },
+        { x = display.contentCenterX - 15, y = display.contentCenterY + 60 },
+        { x = display.contentCenterX + 35, y = display.contentCenterY + 120 }
+    }
 
-    local chromosome2 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-2.png", 26, 14)
-    chromosome2.x = display.contentCenterX + 25
-    chromosome2.y = display.contentCenterY + 110
-    table.insert(chromosomes, chromosome2)
-
-    local chromosome3 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-1.png", 26, 14)
-    chromosome3.x = display.contentCenterX - 15
-    chromosome3.y = display.contentCenterY + 60
-    table.insert(chromosomes, chromosome3)
-
-    local chromosome4 = display.newImageRect(sceneGroup, "imagens/metaphase/chromosome-2.png", 26, 14)
-    chromosome4.x = display.contentCenterX + 35
-    chromosome4.y = display.contentCenterY + 120
-    table.insert(chromosomes, chromosome4)
+    for i, pos in ipairs(chromosomePositions) do
+        local image = "imagens/metaphase/chromosome-" .. (i % 2 == 0 and "2" or "1") .. ".png"
+        local chromosome = display.newImageRect(sceneGroup, image, 26, 14)
+        chromosome.x = pos.x
+        chromosome.y = pos.y
+        table.insert(chromosomes, chromosome)
+    end
 
     -- Navigation buttons
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
     nextButton:setFillColor(0, 0, 0, 1)
     nextButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina5", {
-            effect = "slideLeft",
-            time = 500
-        })
+        composer.gotoScene("pags.pagina5", { effect = "slideLeft", time = 500 })
     end)
 
     local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
     prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina3", {
-            effect = "slideRight",
-            time = 500
-        })
+        composer.gotoScene("pags.pagina3", { effect = "slideRight", time = 500 })
     end)
 
     -- Sound toggle button
@@ -60,7 +77,6 @@ function scene:create(event)
     soundIcon.x = display.contentWidth - 100
     soundIcon.y = 50
 
-    -- Sound status text
     local soundText = display.newText({
         parent = sceneGroup,
         text = "LIGADO",
@@ -75,71 +91,37 @@ function scene:create(event)
     local soundHandle = true
     soundIcon:addEventListener("tap", function()
         if soundHandle then
-            soundIcon.fill = {
-                type = "image",
-                filename = "imagens/mute.png"
-            }
+            soundIcon.fill = { type = "image", filename = "imagens/mute.png" }
             soundText.text = "DESLIGADO"
             soundHandle = false
         else
-            soundIcon.fill = {
-                type = "image",
-                filename = "imagens/sound.png"
-            }
+            soundIcon.fill = { type = "image", filename = "imagens/sound.png" }
             soundText.text = "LIGADO"
             soundHandle = true
         end
     end)
 end
 
--- Accelerometer event listener to move all chromosomes
-local function onAccelerometer(event)
-    -- Check if the accelerometer readings exceed a certain threshold
-    if math.abs(event.xInstant) > 1.5 or math.abs(event.yInstant) > 1.5 or math.abs(event.zInstant) > 1.5 then
-        print("Accelerometer triggered! Moving chromosomes.")
-
-        -- Move each chromosome to its aligned position
-        transition.to(chromosomes[1], {
-            time = 500,
-            x = 313,
-            y = 656
-        })
-        transition.to(chromosomes[2], {
-            time = 500,
-            x = 368,
-            y = 656
-        })
-        transition.to(chromosomes[3], {
-            time = 500,
-            x = 313,
-            y = 680
-        })
-        transition.to(chromosomes[4], {
-            time = 500,
-            x = 368,
-            y = 680
-        })
-
-        -- Remove accelerometer listener after moving the chromosomes
-        Runtime:removeEventListener("accelerometer", onAccelerometer)
-        print("Chromosomes aligned. Accelerometer listener removed.")
-    end
-end
-
 function scene:show(event)
     if event.phase == "did" then
         print("Página 4 exibida")
+        -- Add accelerometer listener
+        Runtime:addEventListener("accelerometer", onAccelerometer)
     end
 end
 
 function scene:hide(event)
     if event.phase == "will" then
         print("Saindo da página 4")
+        -- Remove accelerometer listener
+        Runtime:removeEventListener("accelerometer", onAccelerometer)
+        cleanScene() -- Reset scene
     end
 end
 
 function scene:destroy(event)
     print("Destruindo página 4")
+    cleanScene() -- Ensure no resources are lingering
 end
 
 scene:addEventListener("create", scene)
