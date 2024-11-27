@@ -1,6 +1,8 @@
 local composer = require("composer")
 local scene = composer.newScene()
 
+local backgroundAudio -- Variable for the audio
+
 function scene:create(event)
     local sceneGroup = self.view
 
@@ -9,6 +11,9 @@ function scene:create(event)
         display.contentHeight)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
+
+    -- Load the background audio
+    backgroundAudio = audio.loadStream("sons/003-profase.mp3")
 
     -- Prophase cell structure
     local prophase_cell = display.newImageRect(sceneGroup, "imagens/prophase/prophase-empty.png", 145, 151)
@@ -87,6 +92,7 @@ function scene:create(event)
             }
             soundText.text = "DESLIGADO"
             soundHandle = false
+            audio.setVolume(0) -- Mute the audio
         else
             soundIcon.fill = {
                 type = "image",
@@ -94,6 +100,7 @@ function scene:create(event)
             }
             soundText.text = "LIGADO"
             soundHandle = true
+            audio.setVolume(1) -- Unmute the audio
         end
     end)
 
@@ -136,18 +143,31 @@ end
 function scene:show(event)
     if event.phase == "did" then
         print("Página 3 exibida")
+        -- Play the background audio when the page is displayed
+        if backgroundAudio then
+            audio.play(backgroundAudio, { loops = 0 })
+        end
     end
 end
 
 function scene:hide(event)
     if event.phase == "will" then
         print("Saindo da página 3")
+        -- Stop the background audio when leaving the page
+        if backgroundAudio then
+            audio.stop()
+        end
         Runtime:removeEventListener("touch", openNucleus)
     end
 end
 
 function scene:destroy(event)
     print("Destruindo página 3")
+    -- Dispose of the background audio
+    if backgroundAudio then
+        audio.dispose(backgroundAudio)
+        backgroundAudio = nil
+    end
 end
 
 scene:addEventListener("create", scene)

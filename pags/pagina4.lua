@@ -3,10 +3,16 @@ local scene = composer.newScene()
 
 local chromosomes = {} -- Store chromosome objects for easy access
 local isShaken = false -- Tracks if the shaking has already triggered
+local backgroundAudio -- Variable to hold the background audio
 
 -- Function to clean resources
 local function cleanScene()
     isShaken = false -- Reset shake state
+    if backgroundAudio then
+        audio.stop()
+        audio.dispose(backgroundAudio)
+        backgroundAudio = nil
+    end
 end
 
 -- Move chromosomes to a vertically aligned column, lowering them on the Y-axis
@@ -42,6 +48,9 @@ function scene:create(event)
     local metaphaseEmpty = display.newImageRect(sceneGroup, "imagens/metaphase/metaphase-empty.png", 145, 161)
     metaphaseEmpty.x = display.contentCenterX
     metaphaseEmpty.y = display.contentCenterY + 90
+
+    -- Load the background audio
+    backgroundAudio = audio.loadStream("sons/004-metafase.mp3")
 
     -- Initialize chromosomes
     local chromosomePositions = {
@@ -94,10 +103,12 @@ function scene:create(event)
             soundIcon.fill = { type = "image", filename = "imagens/mute.png" }
             soundText.text = "DESLIGADO"
             soundHandle = false
+            audio.setVolume(0) -- Mute the audio
         else
             soundIcon.fill = { type = "image", filename = "imagens/sound.png" }
             soundText.text = "LIGADO"
             soundHandle = true
+            audio.setVolume(1) -- Unmute the audio
         end
     end)
 end
@@ -107,6 +118,10 @@ function scene:show(event)
         print("Página 4 exibida")
         -- Add accelerometer listener
         Runtime:addEventListener("accelerometer", onAccelerometer)
+        -- Play the background audio when the page is displayed
+        if backgroundAudio then
+            audio.play(backgroundAudio, { loops = 0 })
+        end
     end
 end
 
@@ -115,7 +130,10 @@ function scene:hide(event)
         print("Saindo da página 4")
         -- Remove accelerometer listener
         Runtime:removeEventListener("accelerometer", onAccelerometer)
-        cleanScene() -- Reset scene
+        -- Stop the background audio
+        if backgroundAudio then
+            audio.stop()
+        end
     end
 end
 

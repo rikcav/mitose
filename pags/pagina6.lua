@@ -5,16 +5,12 @@ local physics = require("physics")
 local cells = {} -- Store created cells
 local petriDish -- Reference to the petri dish object
 local fixedSpots = { -- Fixed positions for cells
-{
-    x = display.contentCenterX - 120,
-    y = display.contentCenterY + 100
-}, {
-    x = display.contentCenterX + 120,
-    y = display.contentCenterY + 100
-}, {
-    x = display.contentCenterX - 50,
-    y = display.contentCenterY + 100
-}}
+    { x = display.contentCenterX - 120, y = display.contentCenterY + 100 },
+    { x = display.contentCenterX + 120, y = display.contentCenterY + 100 },
+    { x = display.contentCenterX - 50, y = display.contentCenterY + 100 }
+}
+
+local backgroundAudio -- Variable to hold the background audio
 
 function scene:create(event)
     local sceneGroup = self.view
@@ -22,9 +18,11 @@ function scene:create(event)
     -- Start physics
     physics.start()
 
+    -- Load the background audio
+    backgroundAudio = audio.loadStream("sons/006-telofase.mp3")
+
     -- Background image
-    local background = display.newImageRect(sceneGroup, "imagens/Telofase.png", display.contentWidth,
-        display.contentHeight)
+    local background = display.newImageRect(sceneGroup, "imagens/Telofase.png", display.contentWidth, display.contentHeight)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
 
@@ -63,7 +61,6 @@ function scene:create(event)
     })
     soundText:setFillColor(0, 0, 0, 1)
 
-    -- Sound toggle logic
     local soundHandle = true
     soundIcon:addEventListener("tap", function()
         if soundHandle then
@@ -73,6 +70,7 @@ function scene:create(event)
             }
             soundText.text = "DESLIGADO"
             soundHandle = false
+            audio.setVolume(0) -- Mute the audio
         else
             soundIcon.fill = {
                 type = "image",
@@ -80,6 +78,7 @@ function scene:create(event)
             }
             soundText.text = "LIGADO"
             soundHandle = true
+            audio.setVolume(1) -- Unmute the audio
         end
     end)
 
@@ -87,38 +86,25 @@ function scene:create(event)
     petriDish = display.newImageRect(sceneGroup, "imagens/telophase/petri.png", 430, 250)
     petriDish.x = display.contentCenterX
     petriDish.y = display.contentCenterY + 125
-    physics.addBody(petriDish, "static", {
-        radius = 150,
-        isSensor = true
-    }) -- Make the petri dish a sensor
+    physics.addBody(petriDish, "static", { radius = 150, isSensor = true })
 
     -- Create invisible boundary walls around the petri dish
     local function createBoundaryWalls()
         local dishX, dishY, radius = petriDish.x, petriDish.y, 150
 
-        -- Left wall
-        local leftWall = display.newRect(dishX - radius, dishY, 15, 2 * radius)
-        physics.addBody(leftWall, "static")
-        leftWall.isVisible = false
-        sceneGroup:insert(leftWall)
+        local walls = {
+            { x = dishX - radius, y = dishY, width = 15, height = 2 * radius }, -- Left wall
+            { x = dishX + radius, y = dishY, width = 15, height = 2 * radius }, -- Right wall
+            { x = dishX, y = dishY - radius, width = 2 * radius, height = 15 }, -- Top wall
+            { x = dishX, y = dishY + radius, width = 2 * radius, height = 15 } -- Bottom wall
+        }
 
-        -- Right wall
-        local rightWall = display.newRect(dishX + radius, dishY, 15, 2 * radius)
-        physics.addBody(rightWall, "static")
-        rightWall.isVisible = false
-        sceneGroup:insert(rightWall)
-
-        -- Top wall
-        local topWall = display.newRect(dishX, dishY - radius, 2 * radius, 15)
-        physics.addBody(topWall, "static")
-        topWall.isVisible = false
-        sceneGroup:insert(topWall)
-
-        -- Bottom wall
-        local bottomWall = display.newRect(dishX, dishY + radius, 2 * radius, 15)
-        physics.addBody(bottomWall, "static")
-        bottomWall.isVisible = false
-        sceneGroup:insert(bottomWall)
+        for _, wall in ipairs(walls) do
+            local boundary = display.newRect(wall.x, wall.y, wall.width, wall.height)
+            physics.addBody(boundary, "static")
+            boundary.isVisible = false
+            sceneGroup:insert(boundary)
+        end
     end
 
     createBoundaryWalls()
@@ -129,21 +115,13 @@ function scene:create(event)
         local cell1 = display.newImageRect(sceneGroup, "imagens/telophase/divided_cell.png", 42, 35)
         cell1.x = spot.x - 15
         cell1.y = spot.y
-        physics.addBody(cell1, {
-            radius = 20,
-            bounce = 0.9,
-            isSensor = true
-        })
+        physics.addBody(cell1, { radius = 20, bounce = 0.9, isSensor = true })
         cell1.gravityScale = 0 -- Prevent gravity from affecting cells
 
         local cell2 = display.newImageRect(sceneGroup, "imagens/telophase/divided_cell.png", 42, 35)
         cell2.x = spot.x + 15
         cell2.y = spot.y
-        physics.addBody(cell2, {
-            radius = 20,
-            bounce = 0.9,
-            isSensor = true
-        })
+        physics.addBody(cell2, { radius = 20, bounce = 0.9, isSensor = true })
         cell2.gravityScale = 0
 
         -- Add touch event listener to unlock cells
@@ -175,6 +153,10 @@ function scene:show(event)
     if event.phase == "did" then
         print("Página 6 exibida")
         physics.start()
+        -- Play the background audio when the page is displayed
+        if backgroundAudio then
+            audio.play(backgroundAudio, { loops = 0 })
+        end
     end
 end
 
@@ -191,11 +173,20 @@ function scene:hide(event)
             end
         end
         cells = {}
+
+        -- Stop the background audio
+        if backgroundAudio then
+            audio.stop()
+        end
     end
 end
 
 function scene:destroy(event)
     print("Destruindo página 6")
+    if backgroundAudio then
+        audio.dispose(backgroundAudio)
+        backgroundAudio = nil
+    end
 end
 
 scene:addEventListener("create", scene)

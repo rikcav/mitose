@@ -1,14 +1,18 @@
 local composer = require("composer")
 local scene = composer.newScene()
 
+local backgroundAudio -- Variable to hold the background audio
+
 function scene:create(event)
     local sceneGroup = self.view
 
     -- Background image
-    local background = display.newImageRect(sceneGroup, "imagens/Anafase.png", display.contentWidth,
-        display.contentHeight)
+    local background = display.newImageRect(sceneGroup, "imagens/Anafase.png", display.contentWidth, display.contentHeight)
     background.x = display.contentCenterX
     background.y = display.contentCenterY
+
+    -- Load the background audio
+    backgroundAudio = audio.loadStream("sons/005-anafase.mp3")
 
     -- Function to add dragging logic to a chromosome
     local function makeDraggable(chromosome)
@@ -42,39 +46,16 @@ function scene:create(event)
     end
 
     -- Create chromosomes with dragging functionality
-    local chromosomes = {{
-        image = "imagens/anaphase/left-chromosome-1.png",
-        x = display.contentCenterX - 14,
-        y = display.contentCenterY + 42
-    }, {
-        image = "imagens/anaphase/right-chromosome-1.png",
-        x = display.contentCenterX + 14,
-        y = display.contentCenterY + 42
-    }, {
-        image = "imagens/anaphase/left-chromosome-2.png",
-        x = display.contentCenterX - 14,
-        y = display.contentCenterY + 80
-    }, {
-        image = "imagens/anaphase/right-chromosome-2.png",
-        x = display.contentCenterX + 14,
-        y = display.contentCenterY + 80
-    }, {
-        image = "imagens/anaphase/left-chromosome-1.png",
-        x = display.contentCenterX - 14,
-        y = display.contentCenterY + 152
-    }, {
-        image = "imagens/anaphase/right-chromosome-1.png",
-        x = display.contentCenterX + 14,
-        y = display.contentCenterY + 152
-    }, {
-        image = "imagens/anaphase/left-chromosome-2.png",
-        x = display.contentCenterX - 14,
-        y = display.contentCenterY + 186
-    }, {
-        image = "imagens/anaphase/right-chromosome-2.png",
-        x = display.contentCenterX + 14,
-        y = display.contentCenterY + 186
-    }}
+    local chromosomes = { 
+        { image = "imagens/anaphase/left-chromosome-1.png", x = display.contentCenterX - 14, y = display.contentCenterY + 42 },
+        { image = "imagens/anaphase/right-chromosome-1.png", x = display.contentCenterX + 14, y = display.contentCenterY + 42 },
+        { image = "imagens/anaphase/left-chromosome-2.png", x = display.contentCenterX - 14, y = display.contentCenterY + 80 },
+        { image = "imagens/anaphase/right-chromosome-2.png", x = display.contentCenterX + 14, y = display.contentCenterY + 80 },
+        { image = "imagens/anaphase/left-chromosome-1.png", x = display.contentCenterX - 14, y = display.contentCenterY + 152 },
+        { image = "imagens/anaphase/right-chromosome-1.png", x = display.contentCenterX + 14, y = display.contentCenterY + 152 },
+        { image = "imagens/anaphase/left-chromosome-2.png", x = display.contentCenterX - 14, y = display.contentCenterY + 186 },
+        { image = "imagens/anaphase/right-chromosome-2.png", x = display.contentCenterX + 14, y = display.contentCenterY + 186 }
+    }
 
     for _, data in ipairs(chromosomes) do
         local chromosome = display.newImageRect(sceneGroup, data.image, 30, 13)
@@ -87,19 +68,13 @@ function scene:create(event)
     local nextButton = display.newText(sceneGroup, "PRÓXIMA", 685, 990, native.systemFont, 30)
     nextButton:setFillColor(0, 0, 0, 1)
     nextButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina6", {
-            effect = "slideLeft",
-            time = 500
-        })
+        composer.gotoScene("pags.pagina6", { effect = "slideLeft", time = 500 })
     end)
 
     local prevButton = display.newText(sceneGroup, "ANTERIOR", 88, 990, native.systemFont, 30)
     prevButton:setFillColor(0, 0, 0, 1)
     prevButton:addEventListener("tap", function()
-        composer.gotoScene("pags.pagina4", {
-            effect = "slideRight",
-            time = 500
-        })
+        composer.gotoScene("pags.pagina4", { effect = "slideRight", time = 500 })
     end)
 
     -- Sound toggle button
@@ -122,19 +97,15 @@ function scene:create(event)
     local soundHandle = true
     soundIcon:addEventListener("tap", function()
         if soundHandle then
-            soundIcon.fill = {
-                type = "image",
-                filename = "imagens/mute.png"
-            }
+            soundIcon.fill = { type = "image", filename = "imagens/mute.png" }
             soundText.text = "DESLIGADO"
             soundHandle = false
+            audio.setVolume(0) -- Mute the audio
         else
-            soundIcon.fill = {
-                type = "image",
-                filename = "imagens/sound.png"
-            }
+            soundIcon.fill = { type = "image", filename = "imagens/sound.png" }
             soundText.text = "LIGADO"
             soundHandle = true
+            audio.setVolume(1) -- Unmute the audio
         end
     end)
 end
@@ -142,17 +113,29 @@ end
 function scene:show(event)
     if event.phase == "did" then
         print("Página 5 exibida")
+        -- Play the background audio when the page is displayed
+        if backgroundAudio then
+            audio.play(backgroundAudio, { loops = 0 })
+        end
     end
 end
 
 function scene:hide(event)
     if event.phase == "will" then
         print("Saindo da página 5")
+        -- Stop the background audio
+        if backgroundAudio then
+            audio.stop()
+        end
     end
 end
 
 function scene:destroy(event)
     print("Destruindo página 5")
+    if backgroundAudio then
+        audio.dispose(backgroundAudio)
+        backgroundAudio = nil
+    end
 end
 
 scene:addEventListener("create", scene)

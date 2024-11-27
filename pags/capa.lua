@@ -1,6 +1,8 @@
 local composer = require("composer")
 local scene = composer.newScene()
 
+local backgroundAudio -- Variable for the audio
+
 function scene:create(event)
     local sceneGroup = self.view
 
@@ -49,6 +51,9 @@ function scene:create(event)
     })
     soundText:setFillColor(100, 100, 100, 1)
 
+    -- Load the background audio
+    backgroundAudio = audio.loadStream("sons/000-capa.mp3")
+
     -- Sound toggle logic
     local soundHandle = true
     soundIcon:addEventListener("tap", function()
@@ -59,6 +64,7 @@ function scene:create(event)
             }
             soundText.text = "DESLIGADO"
             soundHandle = false
+            audio.setVolume(0) -- Mute the audio
         else
             soundIcon.fill = {
                 type = "image",
@@ -66,6 +72,7 @@ function scene:create(event)
             }
             soundText.text = "LIGADO"
             soundHandle = true
+            audio.setVolume(1) -- Unmute the audio
         end
     end)
 end
@@ -73,17 +80,30 @@ end
 function scene:show(event)
     if event.phase == "did" then
         print("Capa exibida")
+        -- Play the background audio when the page is displayed
+        if backgroundAudio then
+            audio.play(backgroundAudio, { loops = 0 })
+        end
     end
 end
 
 function scene:hide(event)
     if event.phase == "will" then
         print("Saindo da capa")
+        -- Stop the background audio when leaving the page
+        if backgroundAudio then
+            audio.stop()
+        end
     end
 end
 
 function scene:destroy(event)
     print("Destruindo capa")
+    -- Dispose of the background audio
+    if backgroundAudio then
+        audio.dispose(backgroundAudio)
+        backgroundAudio = nil
+    end
 end
 
 scene:addEventListener("create", scene)
